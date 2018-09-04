@@ -29,7 +29,7 @@
 
 - name: 'Configura MySQL para aceitar conexões remotas'
   copy:
-    src: 'files/my.cnf'
+    src: 'roles/mysql/files/my.cnf'
     dest: '/etc/mysql/my.cnf'
   become: yes
   notify:
