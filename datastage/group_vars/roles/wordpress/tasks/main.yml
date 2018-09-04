@@ -1,0 +1,39 @@
+---
+- name: 'Baixa o arquivo de instalação do Wordpress'
+  get_url:
+      dest: /tmp/wordpress.tar.gz # required. Absolute path of where to download the file to.,If C(dest) is a directory, either the server provided filename or, if none provided, the base name of the URL on the remote server will be used. If a directory, C(force) has no effect.,If C(dest) is a directory, the file will always be downloaded (regardless of the C(force) option), but replaced only if the contents changed..
+      url: 'https://wordpress.org/latest.tar.gz' # required. HTTP, HTTPS, or FTP URL in the form (http|https|ftp)://[user[:pass]]@host.domain[:port]/path
+       
+- name: 'Descompacta o Wordpress'
+  unarchive:
+      src: '/tmp/wordpress.tar.gz' # required. If C(remote_src=no) (default), local path to archive file to copy to the target server; can be absolute or relative. If C(remote_src=yes), path on the target server to existing archive file to unpack.,If C(remote_src=yes) and C(src) contains C(://), the remote machine will download the file from the URL first. (version_added 2.0). This is only for simple cases, for full download support use the M(get_url) module.
+      dest: /var/www/ # required. Remote absolute path where the archive should be unpacked.
+      remote_src: yes # not required. Set to C(yes) to indicate the archived file is already on the remote system and not local to the Ansible controller.,This option is mutually exclusive with C(copy).
+  become: yes
+
+- name: 'Iniciando arquivo de configuração do Wordpress'
+  copy:
+      dest: "{{wp_installation_dir}}/wp-config.php" # required. Remote absolute path where the file should be copied to. If I(src) is a directory, this must be a directory too. If I(dest) is a nonexistent path and if either I(dest) ends with "/" or I(src) is a directory, I(dest) is created. If I(src) and I(dest) are files, the parent directory of I(dest) isn't created: the task fails if it doesn't already exist.
+      src:  "{{wp_installation_dir}}/wp-config-sample.php" # not required. Local path to a file to copy to the remote server; can be absolute or relative. If path is a directory, it is copied recursively. In this case, if path ends with "/", only inside contents of that directory are copied to destination. Otherwise, if it does not end with "/", the directory itself with all contents is copied. This behavior is similar to Rsync.
+      remote_src: yes # not required. If C(no), it will search for I(src) at originating/master machine.,If C(yes) it will go to the remote/target machine for the I(src). Default is C(no).,Currently I(remote_src) does not support recursive copying.,I(remote_src) only works with C(mode=preserve) as of version 2.6.
+  become: yes
+
+- name: 'Configura o wp-config com as entradas do banco MYSQL'
+  replace:
+      path: "{{wp_installation_dir}}/wp-config.php" # required. The file to modify.,Before 2.3 this option was only usable as I(dest), I(destfile) and I(name).
+      regexp: "{{ item.regex }}" # required. The regular expression to look for in the contents of the file. Uses Python regular expressions; see U(http://docs.python.org/2/library/re.html). Uses MULTILINE mode, which means C(^) and C($) match the beginning and end of the file, as well as the beginning and end respectively of I(each line) of the file.,Does not use DOTALL, which means the C(.) special character matches any character I(except newlines). A common mistake is to assume that a negated character set like C([^#]) will also not match newlines. In order to exclude newlines, they must be added to the set like C([^#\n]).,Note that, as of ansible 2, short form tasks should have any escape sequences backslash-escaped in order to prevent them being parsed as string literal escapes. See the examples.
+      replace: "{{ item.value }}" # not required. The string to replace regexp matches. May contain backreferences that will get expanded with the regexp capture groups if the regexp matches. If not set, matches are removed entirely.
+  become: yes # not required. If specified, the line before the replace/remove will occur. Can be used in combination with C(after). Uses Python regular expressions; see U(http://docs.python.org/2/library/re.html).
+  with_items:
+    - { regex: 'database_name_here', value: "{{ wp_db_name }}"}
+    - { regex: 'username_here', value: "{{ wp_username }}"}
+    - { regex: 'password_here', value: "{{ wp_user_password}}"}
+    - { regex: 'localhost', value: "{{ wp_db_ip }}"}
+
+- name: 'Configura Apache para servir o Wordpress'
+  template:
+    dest: '/etc/apache2/sites-available/000-default.conf' # required. Location to render the template to on the remote machine.
+    src: 'templates/000-default.conf.j2' # required. Path of a Jinja2 formatted template on the Ansible controller. This can be a relative or absolute path.
+  become: yes
+  notify:
+    - restart apache
