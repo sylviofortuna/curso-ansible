@@ -1,2 +1,2 @@
-# prod-bb
+# curso-ansible
 Repositório de testes
