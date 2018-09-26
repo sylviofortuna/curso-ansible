@@ -4,6 +4,6 @@
     - mysql
   
 
-- hosts: wordpress
-  roles: 
-    - wordpress
+# - hosts: wordpress
+#   roles: 
+#     - wordpress

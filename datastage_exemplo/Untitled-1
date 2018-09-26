@@ -1,0 +1,40 @@
+https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html
+# Enable to use MySQL 8.0
+[mysql80-community]
+name=MySQL 8.0 Community Server
+baseurl=http://repo.mysql.com/yum/mysql-8.0-community/el/6/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+
+
+
+replicacao assincrona - MySQL 
+*Menor consumo de banda (melhor para maiores distâncias) / Risco de perda de algum dado
+
+facilidade de clusterização  MariaDB
+MariaDB é um fork do MySQL feito por um dos desenvolvedores principais da MySQL
+ Michael “Monty” 
+
+MariaDB - participação na decisao do patches
+
+
+MariaDB: MariaDB offers a variety of database connectors including ADO.NET, C, C++, D, Java, JavaScript, ODBC, Perl, PHP, Python, Ruby, and Visual Studio plug-in.
+
+MySQL: MySQL offers a variety of database connectors including C, C++, Delphi, Perl, Java, Lua, .NET, Node.js, Python, PHP, Lisp, Go, R, D, and Erlang.
+
+Você pode forçar a execução da query no formato mysql, logo, pode realizar o teste de performance com MariaDB e MySQL
+
+MariaDB does not have closed source modules like the ones that can be found in MySQL Enterprise Edition. In fact, all the closed source features in MySQL 5.5 Enterprise Edition are found in the MariaDB open source version. 
+All bugs and development plans are public. 
+
+https://mariadb.com/kb/en/library/mariadb-releases/
+
+
+Desenvolvimento mais aberto e vibrante
+
+O MariaDB é totalmente desenvolvido em código aberto (software livre e open source). Todas as decisões de desenvolvimento podem ser revisadas e discutidas em uma lista de discussão pública no public Bug tracker. Contribuir para o MariaDB com patches é fácil e o fluxo de patch é transparente no repositório de código. As estatísticas do Github para o MySQL 5.7 mostram bem mais colaboradores se compararmos com o Maria DB. Além disso,  o MariaDB parece bem mais ativo em questões de documentação e distribuição.
+
+Segurança mais rápida e transparente
+
+A Oracle tem apenas uma política para realizar lançamentos de segurança (e anúncios relacionados) a cada três meses para todos os seus produtos. No entanto, o MySQL tem uma nova versão a cada dois meses. Às vezes, isso leva a situações em que estas atualizações de segurança e as informações de segurança não são sincronizadas. Além disso, as notas de lançamento do MySQL não listam todos os identificadores CVE.

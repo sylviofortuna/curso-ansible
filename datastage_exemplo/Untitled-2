@@ -1,0 +1,8 @@
+yum_repo => cadastrar repositorio
+
+- name: install the latest version of Apache from the testing repo
+  yum:
+    name: httpd
+    enablerepo: "epel,ol7_latest"
+    state: present
+
