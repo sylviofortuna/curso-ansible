@@ -1,11 +1,11 @@
 ---
 - name: COnfigura repositório epel
-  shell: rpm -ivh /vagrant/epel-release-latest-7.noarch.rpm
+  shell: rpm -ivh --replacepkgs /vagrant/epel-release-latest-7.noarch.rpm
   become: yes
 
-- name: Configura repositório mysql-community
-  shell: rpm -ivh /vagrant/mysql80-community-release-el7-1.noarch.rpm
-  become: yes
+# - name: Configura repositório mysql-community
+#   shell: rpm -ivh /vagrant/mysql80-community-release-el7-1.noarch.rpm
+#   become: yes
 
 # - name: Configura repositorio mysql
 #   yum: name=/vagrant/mysql80-community-release-el7-1.noarch.rpm
@@ -21,16 +21,17 @@
 # - name: Instala repo epel
 #   shell: rpm -ivh epel-release-latest-7.noarch.rpm
 #   become: yes
-# # 
-# - name: 'Instala pacotes de dependencia do sistema operacional'
-#   yum:
-#     name: "{{ item }}"
-#     state: latest
-#   become: yes
-#   with_items:
-#     - mysql
-#     - mysql-server
-#     - mysql-libs
+# 
+- name: 'Instala pacotes de dependencia do sistema operacional'
+  yum:
+    name: "{{ item }}"
+    state: latest
+  become: yes
+  with_items:
+    - mysql-community-client
+    - mysql-community-libs
+    - mysql-community-libs-compat
+    - mysql-community-common
 
 # - name: 'Cria o banco do MySQL'
   # mysql_db:
